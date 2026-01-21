@@ -45,14 +45,14 @@ const Auth = {
         if (user.role === 'customer') {
             window.location.href = `${CONTEXT_PATH}/customer/dashboard.jsp`;
         } else if (user.role === 'driver') {
-            window.location.href = `${CONTEXT_PATH}/driver/driverInfo.jsp`;
+            window.location.href = `${CONTEXT_PATH}/driver/dashboard.jsp`;
         } else {
             window.location.href = `${CONTEXT_PATH}/login.jsp`;
         }
     },
 
-    redirectToDriverDashboard: function () {
-        window.location.href = `${CONTEXT_PATH}/driver/dashboard.jsp`;
+    redirectToDriverInfo: function () {
+        window.location.href = `${CONTEXT_PATH}/driver/driverInfo.jsp`;
     },
 
     logout: async function () {
@@ -67,5 +67,9 @@ const Auth = {
             sessionStorage.removeItem('user');
             window.location.href = `${CONTEXT_PATH}/login.jsp`;
         }
-    }
+    },
+
+    redirectToRidePage: function () {
+        window.location.href = `${CONTEXT_PATH}/driver/ride.jsp`;
+    },
 };

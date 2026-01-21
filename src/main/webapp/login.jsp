@@ -56,7 +56,7 @@
 
                     // Use Auth utility helpers
                     setTimeout(() => {
-                        Auth.redirectToDriverDashboard();
+                        Auth.redirectToDashboard(result.data);
                     }, 1000)
                 }
             } catch (err) {

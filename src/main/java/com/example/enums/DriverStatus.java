@@ -1,8 +1,7 @@
 package com.example.enums;
 
 public enum DriverStatus {
-    AVAILABLE,
-    UNAVAILABLE,
+    ONLINE,
     ON_RIDE,
     OFFLINE
 }

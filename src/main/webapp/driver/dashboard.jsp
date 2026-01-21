@@ -168,11 +168,44 @@
                     <p><b>Drop:</b> \${ride.drop}</p>
                     <p><b>Distance:</b> \${(ride.estimatedDistance).toFixed(2)} km</p>
                     <p><b>Fare:</b> \${(ride.estimatedFare).toFixed(2)} Rupees</p>
-                    <button type="button">Accept</button>
+                    <button id="accept-ride-button" type="button">Accept</button>
                     <hr>
                 `;
+
+                const acceptButton = div.querySelector("#accept-ride-button");
+                acceptButton.addEventListener("click", () => acceptRide(ride));
+
                 rideRequestsDiv.appendChild(div);
             });
+        }
+
+        async function acceptRide(rideRequest) {
+            try {
+                const response = await fetch(
+                    CONTEXT_PATH + "/api/rides/accept",
+                    {
+                        method: "POST",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            id: rideRequest.id,
+                            pickupLocationId: rideRequest.pickupLocationId,
+                            dropLocationId: rideRequest.dropLocationId
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to accept ride");
+                }
+                sessionStorage.setItem('rideRequestId', rideRequest.id);
+                const result = await response.json();
+                alert(result.message);
+
+                Auth.redirectToRidePage();
+            } catch (err) {
+                console.error(err);
+            }
         }
     </script>
 

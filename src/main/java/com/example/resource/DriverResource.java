@@ -42,7 +42,7 @@ public class DriverResource {
         driver.setDriverId(driverId);
         driver.setVehicleType(driverDto.getVehicleType());
         driver.setVehicleNumber(driverDto.getVehicleNumber());
-        driver.setStatus(DriverStatus.AVAILABLE);
+        driver.setStatus(DriverStatus.ONLINE);
         driver.setCreatedAt(new java.util.Date().toString());
 
         try {

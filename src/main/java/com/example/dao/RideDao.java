@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.example.config.DatabaseConfig;
 import com.example.enums.RideRequestStatus;
+import com.example.enums.RideStatus;
+import com.example.models.Ride;
 import com.example.models.RideRequest;
 
 public class RideDao {
@@ -167,5 +169,201 @@ public class RideDao {
             }
         }
 
+    }
+
+    public RideRequest updateRideRequest(RideRequest rideRequest) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DatabaseConfig.getInstance().getConnection();
+            String sql = "UPDATE ride_requests SET status = ? WHERE id = ? RETURNING id";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, rideRequest.getStatus());
+            pstmt.setInt(2, rideRequest.getId());
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int generatedId = rs.getInt("id");
+                rideRequest.setId(generatedId);
+                return rideRequest;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    DatabaseConfig.getInstance().closeConnection(conn);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public Ride createRide(Ride ride) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "INSERT INTO rides (driver_id, ride_request_id, start_time, status) VALUES (?, ?, ?, ?) RETURNING id";
+            conn = DatabaseConfig.getInstance().getConnection();
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, ride.getDriverId());
+            pstmt.setInt(2, ride.getRideRequestId());
+            pstmt.setTimestamp(3, ride.getStartTime());
+            pstmt.setString(4, ride.getStatus().toString());
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int generatedId = rs.getInt("id");
+                ride.setId(generatedId);
+                return ride;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    DatabaseConfig.getInstance().closeConnection(conn);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public Ride endRide(Ride ride) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "UPDATE rides SET end_time = ?, status = ?, final_fare = ?, final_distance = ? WHERE id = ? RETURNING id";
+            conn = DatabaseConfig.getInstance().getConnection();
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setTimestamp(1, ride.getEndTime());
+            pstmt.setString(2, ride.getStatus().toString());
+            pstmt.setDouble(3, ride.getFinalFare());
+            pstmt.setDouble(4, ride.getFinalDistance());
+            pstmt.setInt(5, ride.getId());
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int generatedId = rs.getInt("id");
+                ride.setId(generatedId);
+                return ride;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    DatabaseConfig.getInstance().closeConnection(conn);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public Ride getRideByRequestId(int rideRequestId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT * FROM rides WHERE ride_request_id = ?";
+            conn = DatabaseConfig.getInstance().getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, rideRequestId);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                Ride ride = new Ride();
+                ride.setId(rs.getInt("id"));
+                ride.setDriverId(rs.getInt("driver_id"));
+                ride.setRideRequestId(rs.getInt("ride_request_id"));
+                ride.setStatus(RideStatus.valueOf(rs.getString("status")));
+                ride.setStartTime(rs.getTimestamp("start_time"));
+                ride.setEndTime(rs.getTimestamp("end_time"));
+                ride.setFinalDistance(rs.getDouble("final_distance"));
+                ride.setFinalFare(rs.getDouble("final_fare"));
+                return ride;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    DatabaseConfig.getInstance().closeConnection(conn);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public void updateRideStatus(Ride ride) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DatabaseConfig.getInstance().getConnection();
+            String sql = "UPDATE rides SET status = ?, start_time = ? WHERE id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, ride.getStatus().toString());
+            pstmt.setTimestamp(2, ride.getStartTime());
+            pstmt.setInt(3, ride.getId());
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (conn != null)
+                    DatabaseConfig.getInstance().closeConnection(conn);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -24,40 +24,53 @@
         if (!rideId) {
             alert("Invalid ride");
         } else {
-            fetch(CONTEXT_PATH + "/api/rides/" + rideId, {
-                method: "GET",
-                credentials: "include"
-            })
-                .then(res => res.json())
-                .then(result => {
-                    console.log(result);
-
-                    if (!result.success || !result.data) {
-                        alert("Ride not found");
-                        return;
-                    }
-
-                    const rideRequest = result.data;
-
-                    document.getElementById("pickup-location").textContent =
-                        rideRequest.pickup;
-
-                    document.getElementById("drop-location").textContent =
-                        rideRequest.drop;
-
-                    document.getElementById("estimated-distance").textContent =
-                        rideRequest.estimatedDistance.toFixed(2) + " km";
-
-                    document.getElementById("estimated-fare").textContent =
-                        "₹ " + rideRequest.estimatedFare.toFixed(2);
-
-                    document.getElementById("status").textContent =
-                        rideRequest.status;
+            // Function to fetch ride details
+            function fetchRideDetails() {
+                fetch(CONTEXT_PATH + "/api/rides/" + rideId, {
+                    method: "GET",
+                    credentials: "include"
                 })
-                .catch(err => {
-                    console.error(err);
-                    alert("Failed to load ride details");
-                });
+                    .then(res => res.json())
+                    .then(result => {
+                        console.log(result);
+
+                        if (!result.success || !result.data) {
+                            // alert("Ride not found");
+                            return;
+                        }
+
+                        const rideRequest = result.data;
+
+                        document.getElementById("pickup-location").textContent =
+                            rideRequest.pickup;
+
+                        document.getElementById("drop-location").textContent =
+                            rideRequest.drop;
+
+                        document.getElementById("estimated-distance").textContent =
+                            rideRequest.estimatedDistance.toFixed(2) + " km";
+
+                        document.getElementById("estimated-fare").textContent =
+                            "₹ " + rideRequest.estimatedFare.toFixed(2);
+
+                        document.getElementById("status").textContent =
+                            rideRequest.status;
+
+                        // Redirect if accepted
+                        if (rideRequest.status === "ACCEPTED") {
+                            window.location.href = "ride.jsp?id=" + rideId;
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            }
+
+            // Initial fetch
+            fetchRideDetails();
+
+            // Poll every 3 seconds
+            setInterval(fetchRideDetails, 3000);
         }
     </script>
 </body>

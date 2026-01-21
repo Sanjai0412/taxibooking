@@ -67,7 +67,11 @@
 
                 // Use Auth utility helpers
                 setTimeout(() => {
-                    Auth.redirectToDashboard(result.data);
+                    if (result.data.role === 'driver') {
+                        Auth.redirectToDriverInfo();
+                    } else {
+                        Auth.redirectToDashboard(result.data);
+                    }
                 }, 1000)
             }
         } catch (err) {
