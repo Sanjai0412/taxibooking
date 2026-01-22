@@ -57,19 +57,29 @@ const Auth = {
 
     logout: async function () {
         try {
-            await fetch(`${CONTEXT_PATH}/api/auth/logout`, {
+            const response = await fetch(`${CONTEXT_PATH}/api/auth/logout`, {
                 method: "POST",
                 credentials: "include"
             });
+
+            if (!response.ok) {
+                throw new Error("Failed to logout");
+            }
+            const result = await response.json();
+            alert(result.message);
         } catch (e) {
             console.error("Logout error:", e);
         } finally {
             sessionStorage.removeItem('user');
-            window.location.href = `${CONTEXT_PATH}/login.jsp`;
+            this.redirectToLoginPage();
         }
     },
 
     redirectToRidePage: function () {
         window.location.href = `${CONTEXT_PATH}/driver/ride.jsp`;
+    },
+
+    redirectToLoginPage: function () {
+        window.location.href = `${CONTEXT_PATH}/login.jsp`;
     },
 };

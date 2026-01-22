@@ -17,6 +17,7 @@
         <input type="submit" value="Submit">
     </form>
 
+    <script src="${pageContext.request.contextPath}/js/auth.js"></script>
     <script>
         const CONTEXT_PATH = '${pageContext.request.contextPath}';
         const form = document.getElementById('driverForm');

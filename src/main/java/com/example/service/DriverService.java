@@ -8,6 +8,7 @@ import com.example.util.DistanceUtil;
 import com.example.dao.DriverDao;
 import com.example.dao.LocationDao;
 import com.example.dao.RideDao;
+import com.example.enums.DriverStatus;
 import com.example.models.Driver;
 import com.example.models.DriverLocation;
 import com.example.models.Location;
@@ -51,5 +52,10 @@ public class DriverService {
         LocationDao locationDao = new LocationDao();
         Location location = locationDao.getLocationById(locationId);
         driverDao.setDriverLocation(driverId, location.getLatitude(), location.getLongitude());
+    }
+
+    public void setDriverStatus(int driverId, DriverStatus status) {
+        DriverDao driverDao = new DriverDao();
+        driverDao.setDriverStatus(driverId, status);
     }
 }

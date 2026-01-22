@@ -21,7 +21,7 @@
         <input type="submit" value="Book Ride">
 
     </form>
-    <a href="javascript:void(0)">Logout</a>
+    <button id="logout-btn">Logout</button>
 
     <script src="${pageContext.request.contextPath}/js/auth.js"></script>
     <script>

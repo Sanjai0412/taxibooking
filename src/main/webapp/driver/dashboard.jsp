@@ -21,7 +21,7 @@
 
     <div id="ride-requests"></div>
 
-    <a href="javascript:void(0)">Logout</a>
+    <button id="logout-btn">Logout</button>
 
     <script src="${pageContext.request.contextPath}/js/auth.js"></script>
     <script>
@@ -33,7 +33,7 @@
         const driverLocationSuggestionsBox = document.getElementById("driver-location-suggestions");
         const driverLocationForm = document.getElementById("driver-location-form");
         const rideRequestsDiv = document.getElementById("ride-requests");
-
+        const logoutBtn = document.getElementById("logout-btn");
         let selectedDriverLocationId = null;
 
         // AUTOCOMPLETE
@@ -41,6 +41,9 @@
 
         // SUBMIT FORM
         driverLocationForm.addEventListener("submit", handleGoOnline);
+
+        // LOGOUT
+        logoutBtn.addEventListener("click", handleLogout);
 
         async function handleGoOnline(e) {
             e.preventDefault();
@@ -206,6 +209,10 @@
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        async function handleLogout() {
+            Auth.logout();
         }
     </script>
 

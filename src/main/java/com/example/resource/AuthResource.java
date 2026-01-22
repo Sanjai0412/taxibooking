@@ -14,11 +14,13 @@ import javax.ws.rs.core.Response;
 import com.example.dto.LoginRequestDto;
 import com.example.dto.SignUpRequestDto;
 import com.example.dto.UserDto;
+import com.example.enums.DriverStatus;
 import com.example.enums.UserStatus;
 import com.example.mapper.UserMapper;
 import com.example.models.ApiResponse;
 import com.example.models.User;
 import com.example.service.AuthService;
+import com.example.service.DriverService;
 import com.example.service.UserService;
 
 @Path("/auth")
@@ -100,12 +102,16 @@ public class AuthResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response logout(@Context HttpServletRequest req) {
         UserService userService = new UserService();
+        DriverService driverService = new DriverService();
+
         HttpSession session = req.getSession(false);
         if (session == null) {
             return Response.status(401).build();
         }
         try {
-            userService.changeUserStatus(UserStatus.INACTIVE, (Integer) session.getAttribute("userId"));
+            int userId = (Integer) session.getAttribute("userId");
+            userService.changeUserStatus(UserStatus.INACTIVE, userId);
+            driverService.setDriverStatus(userId, DriverStatus.OFFLINE);
             session.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,7 +131,8 @@ public class AuthResource {
         }
         Object userId = session.getAttribute("userId");
         if (userId == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(ApiResponse.error("User ID not found in session")).build();
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(ApiResponse.error("User ID not found in session")).build();
         }
         UserService userService = new UserService();
         try {
