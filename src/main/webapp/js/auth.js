@@ -21,17 +21,14 @@ const Auth = {
         }
     },
 
-    checkAuth: async function (requiredRole) {
+    checkAuth: async function () {
         const user = await this.checkSession();
         console.log(user);
         if (!user) {
             window.location.href = `${CONTEXT_PATH}/login.jsp`;
             return;
         }
-
-        if (requiredRole && user.role !== requiredRole) {
-            this.redirectToDashboard(user);
-        }
+        this.redirectToDashboard(user);
     },
 
     redirectIfLoggedIn: async function () {

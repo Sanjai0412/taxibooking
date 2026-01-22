@@ -14,7 +14,7 @@
     <script>
         const CONTEXT_PATH = '<%= request.getContextPath() %>';
 
-        Auth.checkAuth('driver');
+        Auth.checkAuth();
 
         async function startRide() {
             const rideRequestId = sessionStorage.getItem('rideRequestId');

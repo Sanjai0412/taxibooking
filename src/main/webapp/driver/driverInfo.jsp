@@ -19,6 +19,9 @@
 
     <script src="${pageContext.request.contextPath}/js/auth.js"></script>
     <script>
+
+        Auth.checkAuth();
+
         const CONTEXT_PATH = '${pageContext.request.contextPath}';
         const form = document.getElementById('driverForm');
         form.addEventListener('submit', (event) => {

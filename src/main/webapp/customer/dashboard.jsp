@@ -28,13 +28,13 @@
         const CONTEXT_PATH = '${pageContext.request.contextPath}';
 
         // Protect route
-        Auth.checkAuth('customer');
+        Auth.checkAuth();
 
         const pickupInput = document.getElementById("pickup-location");
         const dropInput = document.getElementById("drop-location");
         const pickupSuggestionsBox = document.getElementById("pickup-suggestions");
         const dropSuggestionsBox = document.getElementById("drop-suggestions");
-
+        const logoutBtn = document.getElementById("logout-btn");
         let selectedPickupId = null;
         let selectedDropId = null;
 
@@ -42,9 +42,11 @@
         pickupInput.addEventListener("input", (e) => getSuggestions(e, "pickup"));
         dropInput.addEventListener("input", (e) => getSuggestions(e, "drop"));
 
-
         // Event listener for the form submission
         const form = document.getElementById("ride-request-form").addEventListener("submit", handleRideRequest);
+
+        // Event listener for logout
+        logoutBtn.addEventListener("click", handleLogout);
 
         // Function to handle form submission
         async function handleRideRequest(e) {
@@ -142,6 +144,10 @@
             });
 
             suggestionsBox.style.display = "block";
+        }
+
+        function handleLogout() {
+            Auth.logout();
         }
     </script>
 </body>

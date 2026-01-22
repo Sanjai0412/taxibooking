@@ -20,6 +20,14 @@ CREATE TABLE drivers (
         ON DELETE CASCADE
 );
 
+CREATE TABLE locations (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+
 CREATE TABLE driver_locations (
     driver_id INT PRIMARY KEY,
     latitude DOUBLE PRECISION NOT NULL,
@@ -37,10 +45,12 @@ CREATE TABLE ride_requests (
 
     user_id INT NOT NULL,
 
+    pickup_location_id INT NOT NULL,
     pickup_label TEXT NOT NULL,
     pickup_lat DOUBLE PRECISION NOT NULL,
     pickup_lng DOUBLE PRECISION NOT NULL,
 
+    drop_location_id INT NOT NULL,
     drop_label TEXT NOT NULL,
     drop_lat DOUBLE PRECISION NOT NULL,
     drop_lng DOUBLE PRECISION NOT NULL,
@@ -55,6 +65,16 @@ CREATE TABLE ride_requests (
     CONSTRAINT fk_ride_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_pickup_location
+        FOREIGN KEY (pickup_location_id)
+        REFERENCES locations(id),
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_drop_location
+        FOREIGN KEY (drop_location_id)
+        REFERENCES locations(id)
         ON DELETE CASCADE
 );
 

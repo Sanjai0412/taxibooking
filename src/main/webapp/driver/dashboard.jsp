@@ -27,7 +27,7 @@
     <script>
         const CONTEXT_PATH = '<%= request.getContextPath() %>';
 
-        Auth.checkAuth('driver');
+        Auth.checkAuth();
 
         const driverLocationInput = document.getElementById("driver-location");
         const driverLocationSuggestionsBox = document.getElementById("driver-location-suggestions");

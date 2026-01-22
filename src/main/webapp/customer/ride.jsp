@@ -81,7 +81,11 @@
             </div>
         </div>
 
+        <script src="${pageContext.request.contextPath}/js/auth.js"></script>
         <script>
+
+            Auth.checkAuth();
+
             const CONTEXT_PATH = '<%= request.getContextPath() %>';
             const params = new URLSearchParams(window.location.search);
             const rideRequestId = params.get("id");
